@@ -16,7 +16,7 @@ public:
     virtual void addFirst(const T& item) = 0;
     virtual void addLast(const T& item) = 0;
     virtual void insertAt(int i, const T& item) = 0;
-    virtual void addSorted(const T& element) = 0;
+    virtual void addSorted(const T& item) = 0;
 
     // Remoção
     virtual T removeFirst() = 0;
