@@ -19,7 +19,7 @@ O projeto apresenta uma separação entre:
 ## 📁 Estrutura do Projeto
 
 ```text
-ed1_list_cpp/
+ed1_array_list_cpp/
 ├── cmake-build-debug/
 ├── include/
 │   ├── ArrayList.h
