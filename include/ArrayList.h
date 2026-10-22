@@ -2,8 +2,8 @@
 // Created by Junio Moreira on 24/09/26.
 //
 
-#ifndef ED1_LIST_CPP_ARRAYLIST_H
-#define ED1_LIST_CPP_ARRAYLIST_H
+#ifndef ED1_ARRAY_LIST_CPP_ARRAYLIST_H
+#define ED1_ARRAY_LIST_CPP_ARRAYLIST_H
 
 #include "List.h"
 #include <iostream>
@@ -28,13 +28,13 @@ private:
     }
 
 public:
-    explicit ArrayList(int size) {
-        this->capacity = size;
-        this->items = new T[capacity];
+    explicit ArrayList(int capacity) {
+        this->capacity = capacity;
+        this->items = new T[this->capacity];
         this->count = 0;
     }
 
-    // Destructor to free dynamically allocated memory
+    // Destructor to deallocate dynamic contiguous memory
     ~ArrayList() override {
         delete[] items;
     }
@@ -47,10 +47,16 @@ public:
         return count == 0;
     }
 
+    int size() const override {
+        return count;
+    }
+
+    // Inserts a new item at the beginning of the list (delegates to insertAt)
     void addFirst(const T& item) override {
         insertAt(0, item);
     }
 
+    // Appends a new item to the end of the array
     void addLast(const T& item) override {
         if (isFull()) {
             std::cout << LIST_FULL << std::endl;
@@ -59,40 +65,43 @@ public:
         items[count++] = item;
     }
 
-    void insertAt(int i, const T& item) override {
+    // Inserts a new item at a specific index by shifting elements to the right
+    void insertAt(int index, const T& item) override {
         if (isFull()) {
             std::cout << LIST_FULL << std::endl;
             return;
         }
-        if (i < 0 || i > count) {
+        if (index < 0 || index > count) {
             throw std::invalid_argument(DOES_NOT_EXIST);
         }
 
-        for (int j = count; j > i; j--) {
+        for (int j = count; j > index; j--) {
             items[j] = items[j - 1];
         }
-        items[i] = item;
+        items[index] = item;
         count++;
     }
 
-    void addSorted(const T& element) override {
+    // Inserts a new item in ascending sorted order (requires operator '<' for type T)
+    void addSorted(const T& item) override {
         if (isFull()) {
             std::cout << LIST_FULL << std::endl;
             return;
         }
 
-        int i = 0;
-        // In C++, T must have the '<' operator defined
-        while (i < count && items[i] < element) {
-            i++;
+        int index = 0;
+        while (index < count && items[index] < item) {
+            index++;
         }
-        insertAt(i, element);
+        insertAt(index, item);
     }
 
+    // Removes and returns the first element of the list
     T removeFirst() override {
         return removeAt(0);
     }
 
+    // Removes and returns the last element of the list
     T removeLast() override {
         if (isEmpty()) {
             throw std::runtime_error(LIST_EMPTY);
@@ -102,14 +111,15 @@ public:
         return removedItem;
     }
 
-    T removeAt(int i) override {
-        if (positionDoesNotExist(i)) {
+    // Removes and returns the element at a specific index by shifting elements to the left
+    T removeAt(int index) override {
+        if (positionDoesNotExist(index)) {
             throw std::invalid_argument(DOES_NOT_EXIST);
         }
 
-        T removedItem = items[i];
+        T removedItem = items[index];
 
-        for (int j = i; j < count - 1; j++) {
+        for (int j = index; j < count - 1; j++) {
             items[j] = items[j + 1];
         }
 
@@ -117,6 +127,7 @@ public:
         return removedItem;
     }
 
+    // Removes the first occurrence of the specified item
     bool remove(const T& item) override {
         int position = find(item);
 
@@ -128,10 +139,12 @@ public:
         return true;
     }
 
+    // Logically resets the list to an empty state
     void clear() override {
-        this->count = 0;
+        count = 0;
     }
 
+    // Performs a linear search and returns the index of the item, or NOT_FOUND (-1)
     int find(const T& item) const override {
         for (int i = 0; i < count; i++) {
             if (items[i] == item) {
@@ -141,24 +154,23 @@ public:
         return NOT_FOUND;
     }
 
-    T get(int i) const override {
-        if (positionDoesNotExist(i)) {
+    // Retrieves the item stored at a specific index
+    T get(int index) const override {
+        if (positionDoesNotExist(index)) {
             throw std::invalid_argument(DOES_NOT_EXIST);
         }
-        return items[i];
+        return items[index];
     }
 
-    void set(int i, const T& item) override {
-        if (positionDoesNotExist(i)) {
+    // Updates the item stored at a specific index
+    void set(int index, const T& item) override {
+        if (positionDoesNotExist(index)) {
             throw std::invalid_argument(DOES_NOT_EXIST);
         }
-        items[i] = item;
+        items[index] = item;
     }
 
-    int size() const override {
-        return count;
-    }
-
+    // Generates a string representation of the list in array format [item1, item2, ...]
     std::string toString() const {
         if (count == 0) {
             return "[]";
@@ -177,4 +189,4 @@ public:
     }
 };
 
-#endif //ED1_LIST_CPP_ARRAYLIST_H
+#endif // ED1_ARRAY_LIST_CPP_ARRAYLIST_H

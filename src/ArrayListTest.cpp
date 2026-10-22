@@ -1,4 +1,8 @@
 //
+// Created by Junio Moreira on 22/10/26.
+//
+
+//
 // Created by Junio Moreira on 24/09/26.
 //
 
@@ -137,15 +141,15 @@ void testFullList() {
 
 int main() {
     initialTests();
-    // testAddFirst();
-    // testInsertAt();
-    // testRemoveFirst();
-    // testRemoveLast();
-    // testRemoveAt();
-    // testRemoveByElement();
-    // testSetMethod();
-    // testAddSorted();
-    // testFullList();
+    testAddFirst();
+    testInsertAt();
+    testRemoveFirst();
+    testRemoveLast();
+    testRemoveAt();
+    testRemoveByElement();
+    testSetMethod();
+    testAddSorted();
+    testFullList();
 
     return 0;
 }
